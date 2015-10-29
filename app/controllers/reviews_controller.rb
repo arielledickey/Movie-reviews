@@ -1,13 +1,13 @@
 class ReviewsController < ApplicationController
+  before_filter :authorize
   before_action :set_review, only: [:show, :edit, :update, :destroy]
 
   def index
     @review = Review.all 
   end
 
-
   def show
-    @review = Review.find(params[:id])
+    # @review = Review.find(params[:id])
   end
 
   def new
@@ -20,15 +20,11 @@ class ReviewsController < ApplicationController
   def create
     @review = Review.new(review_params)
 
-    respond_to do |format|
       if @review.save
-        format.html { redirect_@review, notice: "Movie was successfully created." }
-        format.json { render :show, status: :created, location: @review }
-      else
-        format.html { render :new }
-        format.json { render json: @review.errors, status: :unprocessable_entity }
+    redirect_to @review
+      else 
+    render 'new'
       end
-    end
   end
 
   def update
@@ -51,8 +47,18 @@ class ReviewsController < ApplicationController
   end
 
   private
-  def set_review
-    @review = Review.find(params[:id])
+  def review_params
+    params.require(:review).permit(:title, :text)
   end
 
+  def set_review
+    @review = Review.find(review_params)
+  end
+
+  def user_params
+    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+  end
+
+
 end
+
