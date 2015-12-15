@@ -19,6 +19,9 @@ class ReviewsController < ApplicationController
 
   def create
     @review = Review.new(review_params)
+    @review.save
+    redirect_to @article
+  
 
     respond_to do |format|
       if @review.save
@@ -53,6 +56,10 @@ class ReviewsController < ApplicationController
   private
   def set_review
     @review = Review.find(params[:id])
+  end
+
+  def review_params
+    params.require(:review).permit(:title, :text)
   end
 
 end
